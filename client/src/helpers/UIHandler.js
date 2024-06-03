@@ -27,8 +27,8 @@ export default class UIHandler {
     }
 
     this.buildGameText = () => {
-      scene.Deck = scene.add.text(970, 445, "Deck").setFontSize(18).setFontFamily("Trebuchet MS");
-      scene.Discard = scene.add.text(440, 445, "Discard").setFontSize(18).setFontFamily("Trebuchet MS");
+      scene.pickupCard = scene.add.text(970, 445, "Pickup Card").setFontSize(18).setFontFamily("Trebuchet MS");
+      scene.discard = scene.add.text(440, 445, "Discard").setFontSize(18).setFontFamily("Trebuchet MS");
 
     }
 

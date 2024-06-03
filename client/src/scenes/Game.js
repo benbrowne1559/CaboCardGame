@@ -28,6 +28,7 @@ export class Game extends Scene {
 
         this.load.setPath('assets');
         this.load.image('testCard', '2_of_clubs.png');
+        this.load.image('cardBack', 'card_back.png');
 
         //communicate wif server and run the loadfromDirectory Function
     }
