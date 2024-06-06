@@ -30,7 +30,7 @@ export class Game extends Scene {
         this.load.image('testCard', '2_of_clubs.png');
         this.load.image('cardBack', 'card_back.png');
 
-        //communicate wif server and run the loadfromDirectory Function
+        //read from text file and run loop to load all card images
     }
 
     //constant tick updates for detection

@@ -4,37 +4,43 @@ export default class UIHandler {
 
   constructor(scene) {
 
-    this.ZoneHandler = new ZoneHandler(scene);
+    this.zoneHandler = new ZoneHandler(scene);
 
     this.buildZones = () => {
-      scene.dropZone = this.ZoneHandler.renderZone(470, 500);
-      this.ZoneHandler.renderOutline(scene.dropZone);
+      scene.dropZone = this.zoneHandler.renderZone(470, 500);
+      this.zoneHandler.renderOutline(scene.dropZone);
 
-      scene.dropZone = this.ZoneHandler.renderZone(1000, 500);
-      this.ZoneHandler.renderOutline(scene.dropZone);
+      scene.dropZone = this.zoneHandler.renderZone(1000, 500);
+      this.zoneHandler.renderOutline(scene.dropZone);
+    }
+
+    this.buildDeckAreas = () => {
+      scene.deckArea = scene.add.rectangle(470, 500, 200, 280);
+      scene.deckArea.setStrokeStyle(10, 0xff69b4);
+
+      scene.discardArea = scene.add.rectangle(1000, 500, 200, 280);
+      scene.discardArea.setStrokeStyle(10, 0xff69b4);
+
     }
 
     this.buildPlayerAreas = () => {
-      scene.playerHandArea = scene.add.rectangle(470, 860, 850, 230);
+      scene.playerHandArea = scene.add.rectangle(600, 860, 1100, 230);
       scene.playerHandArea.setStrokeStyle(4, 0xff69b4);
-      scene.playerDeckArea = scene.add.rectangle(1000, 860, 155, 215);
-      scene.playerDeckArea.setStrokeStyle(3, 0x00ffff);
 
-      scene.player2HandArea = scene.add.rectangle(470, 135, 850, 230);
+      scene.player2HandArea = scene.add.rectangle(600, 135, 1100, 230);
       scene.player2HandArea.setStrokeStyle(4, 0xff69b4);
-      scene.player2DeckArea = scene.add.rectangle(1000, 135, 155, 215);
-      scene.player2DeckArea.setStrokeStyle(3, 0x00ffff);
     }
 
     this.buildGameText = () => {
-      scene.pickupCard = scene.add.text(970, 445, "Pickup Card").setFontSize(18).setFontFamily("Trebuchet MS");
+      scene.pickupCard = scene.add.text(960, 445, "Pickup Card").setFontSize(18).setFontFamily("Trebuchet MS");
       scene.discard = scene.add.text(440, 445, "Discard").setFontSize(18).setFontFamily("Trebuchet MS");
 
     }
 
     this.buildUI = () => {
-      this.buildZones();
+      //this.buildZones();
       this.buildPlayerAreas();
+      this.buildDeckAreas();
       this.buildGameText();
 
     }

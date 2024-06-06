@@ -3,7 +3,7 @@ import NormalCard from "./cards/NormalCard";
 
 export default class DeckHandler {
 
-  constructor() {
+  constructor(scene) {
     this.dealCard = (x, y, name, type) => {
       let cards = {
         cardBack: new CardBack(scene),

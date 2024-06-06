@@ -1,6 +1,7 @@
 export default class InteractiveHandler {
 
   constructor(scene) {
+
     scene.pickupCard.on('pointerdown', () => {
       scene.socket.emit("pickupCard", scene.socket.id);
       scene.pickupCard.disableInteractive();
@@ -12,6 +13,10 @@ export default class InteractiveHandler {
 
     scene.pickupCard.on('pointerout', () => {
       scene.pickupCard.setColor('#00ffff');
+    })
+
+    scene.playerHandArea.on('pointerover', () => {
+      scene.socket.emit("overhand", scene.socket.id);
     })
 
   }
