@@ -1,3 +1,5 @@
+const card_names = require('./image_names.json');
+
 const Powers = Object.freeze({
   None: 0,
   SevenEight: 1,
@@ -13,28 +15,15 @@ module.exports = class Deck {
   }
 
   createDeck() {
-    let suits = ['clubs', 'spades', 'hearts', 'diamonds'];
-    let ranks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen'];
-    let values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    let special_values = [13, 13, -1, -1]
-
-    for (let i = 0; i < suits.length; i++) {
-      for (let j = 0; j < ranks.length; j++) {
-        let power = Powers.None;
-        if (ranks[j] == ('7' || '8')) {
-          power = Powers.SevenEight;
-        }
-        if (ranks[j] == ('9' || '10')) {
-          power = Powers.NineTen;
-        }
-        if (ranks[j] == ('jack' || 'queen')) {
-          power = Powers.JackQueen;
-        }
-        this.deck.push([suits[i], ranks[j], values[j], power]);
-      }
-      this.deck.push([suits[i], 'king', special_values[i], Powers.None]);
-    }
-
+    card_names.forEach((card) => {
+      card = card.split(".")[0];
+      let card_split = card.split("_");
+      let suit = card_split[2];
+      let rank = card_split[0];
+      let name = rank + suit;
+      const [value, power] = this.getValue(suit, rank);
+      this.deck.push([name, suit, rank, value, power]);
+    })
   }
   shuffleDeck() {
     let currentIndex = this.deck.length;
@@ -54,5 +43,46 @@ module.exports = class Deck {
       hand.push(this.deck.pop());
     }
     return hand;
+  }
+
+  getValue(suit, rank) {
+    let value = -10;
+    let power = Powers.None;
+    if (rank == 'king') {
+      if ((suit == 'spades') || (suit == 'clubs')) {
+        value = 13;
+      } else {
+        value = -1;
+      }
+      return [value, power]
+    } else {
+      if (rank == 'jack') {
+        value = 11;
+        power = Powers.JackQueen;
+        return [value, power]
+      }
+      if (rank == 'queen') {
+        value = 12;
+        power = Powers.JackQueen;
+        return [value, power]
+      }
+      if (rank == 'ace') {
+        value = 1;
+        return [value, power]
+      }
+      if ((rank == '7') || (rank == '8')) {
+        value = parseInt(rank);
+        power = Powers.SevenEight;
+        return [value, power]
+      }
+      if ((rank == '9') || (rank == '10')) {
+        value = parseInt(rank);
+        power = Powers.NineTen;
+        return [value, power]
+      }
+      value = parseInt(rank);
+      return [value, power]
+    }
+
   }
 }

@@ -1,6 +1,8 @@
 const Deck = require('./server_functions.js');
 
 
+
+
 const server = require('express')();
 const http = require('http').createServer(server);
 
@@ -37,7 +39,6 @@ io.on('connection', function (socket) {
   if (Object.keys(players).length >= 2) {
     io.emit('changeGameState', 'Dealing');
     let deck = new Deck();
-    console.log(deck.deck);
     for (const socketId in players) {
       hand = deck.createHand();
       console.log(socketId, hand);

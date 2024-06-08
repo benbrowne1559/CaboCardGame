@@ -4,7 +4,8 @@ import InteractiveHandler from '../helpers/InteractiveHandler';
 import GameHandler from '../helpers/GameHandler';
 import SocketHandler from '../helpers/SocketHandler';
 import UIHandler from '../helpers/UIHandler';
-//import { loadFromDirectory } from '../helpers/JunkFunctions';
+
+const card_names = require('./image_names.json');
 
 import { Scene } from 'phaser';
 
@@ -27,10 +28,14 @@ export class Game extends Scene {
     preload() {
 
         this.load.setPath('assets');
-        this.load.image('testCard', '2_of_clubs.png');
         this.load.image('cardBack', 'card_back.png');
 
-        //read from text file and run loop to load all card images
+        card_names.forEach((card_image) => {
+            let card = card_image.split(".")[0];
+            let card_split = card.split("_");
+            let name = card_split[0] + card_split[2];
+            this.load.image(name, card_image);
+        })
     }
 
     //constant tick updates for detection

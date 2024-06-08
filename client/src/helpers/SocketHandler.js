@@ -47,7 +47,8 @@ export default class SocketHandler {
       if (socketId == scene.socket.id) {
         console.log(hand);
         for (let i in hand) {
-          let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 860, 'cardBack', 'playerCard'));
+          let cardName = hand[i][0];
+          let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 860, cardName, 'playerCard'));
         }
       }
       else {
