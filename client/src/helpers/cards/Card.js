@@ -1,8 +1,8 @@
 export default class Card {
   constructor(scene) {
-    this.render = (x, y, value) => {
+    this.render = (x, y, value, scale) => {
       let sprite = this.playerCardSprite;
-      let card = scene.add.image(x, y, sprite).setScale(0.26, 0.26).setInteractive().setData({
+      let card = scene.add.image(x, y, sprite).setScale(scale, scale).setInteractive().setData({
         "name": this.name,
         //"value": value,
         "sprite": sprite

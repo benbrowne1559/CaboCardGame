@@ -5,6 +5,7 @@ export default class GameHandler {
     this.isMyTurn = false;
     this.playerHand = [];
     this.player2Hand = [];
+    this.canPickup = true;
 
     this.changeTurn = () => {
       this.isMyTurn = !this.isMyTurn;

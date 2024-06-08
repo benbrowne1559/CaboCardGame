@@ -9,6 +9,7 @@ const http = require('http').createServer(server);
 
 let players = {};
 let readyCheck = 0;
+var deck = []
 
 let allowNewConnection = true;
 
@@ -38,7 +39,7 @@ io.on('connection', function (socket) {
 
   if (Object.keys(players).length >= 2) {
     io.emit('changeGameState', 'Dealing');
-    let deck = new Deck();
+    deck = new Deck();
     for (const socketId in players) {
       hand = deck.createHand();
       console.log(socketId, hand);
@@ -47,16 +48,14 @@ io.on('connection', function (socket) {
 
   }
 
-
-
   socket.on('pickupCard', function (socketId) {
-    console.log(players);
-    if (Object.keys(players).length < 2) return;
-    io.emit('changeGameState', 'Initializing');
-  })
-
-  socket.on("overhand", function (socket) {
-    console.log("here");
+    if (deck.deck.length == 0) {
+      console.log("deck empty");
+      io.emit('emptyDeck', socketId);
+    } else {
+      let card = deck.deck.pop();
+      io.emit('pickupCard', socketId, card);
+    }
   })
 
 })

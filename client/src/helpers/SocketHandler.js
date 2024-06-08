@@ -18,28 +18,9 @@ export default class SocketHandler {
     scene.socket.on('changeGameState', (gameState) => {
       scene.GameHandler.changeGameState(gameState);
       if (gameState == 'Initializing') {
-        scene.DeckHandler.dealCard(1000, 860, 'cardBack', 'playerCard');
-        scene.DeckHandler.dealCard(1000, 135, 'cardBack', 'player2Card');
-        scene.dealCards.setInteractive();
-        scene.dealCards.setColor('#00ffff');
       }
       if (gameState == 'Dealing') {
         //onscreen text 'Dealing'
-      }
-    })
-
-    //when recieves the dealCards message
-    scene.socket.on('dealCards', (socketId, cards) => {
-      //if client socketid do this
-      if (socketId == scene.socket.id) {
-        for (let i in cards) {
-          //so card positions are not ontop of each other
-          let card = scene.GameHandler.playerHand.push(scene.deckHandler.dealCard(155 + (i * 155), 860, cards[i], 'playerCard'));
-        }
-      } else {
-        for (let i in cards) {
-          let card = scene.GameHandler.player2Hand.push(scene.DeckHandler.dealCard(155 + (i * 155), 135, 'cardBack', 'player2Card'));
-        }
       }
     })
 
@@ -48,13 +29,26 @@ export default class SocketHandler {
         console.log(hand);
         for (let i in hand) {
           let cardName = hand[i][0];
-          let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 860, cardName, 'playerCard'));
+          let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 860, cardName, 'playerCard', 0.26));
+          //render cards for discard and deck areas
+          scene.DeckHandler.dealCard(470, 500, 'cardBack', 'playerCard', 0.35);
+          scene.DeckHandler.dealCard(1000, 500, 'cardBack', 'playerCard', 0.35);
         }
       }
       else {
         for (let i in hand) {
-          let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 135, 'cardBack', 'player2Card'));
+          let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 135, 'cardBack', 'player2Card', 0.26));
         }
+      }
+    })
+
+    scene.socket.on('pickupCard', (socketId, card) => {
+      if (socketId != scene.socket.id) {
+        return
+      } else {
+        let cardName = card[0];
+        var pickup = scene.DeckHandler.dealCard(600, 500, cardName, 'playerCard', 0.5);
+
       }
     })
 

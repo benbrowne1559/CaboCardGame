@@ -7,19 +7,28 @@ export default class UIHandler {
     this.zoneHandler = new ZoneHandler(scene);
 
     this.buildZones = () => {
-      scene.dropZone = this.zoneHandler.renderZone(470, 500);
+      scene.dropZone = this.zoneHandler.renderZone(470, 500, 186, 260);
       this.zoneHandler.renderOutline(scene.dropZone);
 
-      scene.dropZone = this.zoneHandler.renderZone(1000, 500);
+      scene.dropZone = this.zoneHandler.renderZone(1000, 500, 186, 260);
       this.zoneHandler.renderOutline(scene.dropZone);
     }
 
     this.buildDeckAreas = () => {
-      scene.deckArea = scene.add.rectangle(470, 500, 200, 280);
-      scene.deckArea.setStrokeStyle(10, 0xff69b4);
+      //scene.discardArea = scene.add.rectangle(470, 500, 200, 280);
+      //scene.discardArea.setStrokeStyle(10, 0xff69b4);
+      scene.discardArea = this.zoneHandler.renderZone(470, 500, 200, 280);
+      this.zoneHandler.renderOutline(scene.discardArea);
+      scene.discardArea.setInteractive({
+        useHandCursor: true,
+        hitArea: new Phaser.Geom.Rectangle(470, 500, 200, 280),
+        hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      });
 
-      scene.discardArea = scene.add.rectangle(1000, 500, 200, 280);
-      scene.discardArea.setStrokeStyle(10, 0xff69b4);
+
+      scene.deckArea = scene.add.rectangle(1000, 500, 200, 280);
+      scene.deckArea.setStrokeStyle(10, 0xff69b4);
+      scene.deckArea.setInteractive();
 
     }
 
@@ -32,8 +41,8 @@ export default class UIHandler {
     }
 
     this.buildGameText = () => {
-      scene.pickupCard = scene.add.text(960, 445, "Pickup Card").setFontSize(18).setFontFamily("Trebuchet MS");
-      scene.discard = scene.add.text(440, 445, "Discard").setFontSize(18).setFontFamily("Trebuchet MS");
+      scene.pickupCard = scene.add.text(960, 330, "Pickup Card").setFontSize(18).setFontFamily("Trebuchet MS");
+      scene.discard = scene.add.text(440, 330, "Discard").setFontSize(18).setFontFamily("Trebuchet MS");
 
     }
 
