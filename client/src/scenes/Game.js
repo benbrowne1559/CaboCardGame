@@ -5,6 +5,7 @@ import GameHandler from '../helpers/GameHandler';
 import SocketHandler from '../helpers/SocketHandler';
 import UIHandler from '../helpers/UIHandler';
 
+
 const card_names = require('./image_names.json');
 
 import { Scene } from 'phaser';
@@ -23,6 +24,7 @@ export class Game extends Scene {
         this.UIHandler = new UIHandler(this);
         this.UIHandler.buildUI();
         this.InteractiveHandler = new InteractiveHandler(this);
+
     }
 
     preload() {

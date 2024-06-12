@@ -12,6 +12,7 @@ module.exports = class Deck {
     this.deck = [];
     this.createDeck();
     this.shuffleDeck();
+    this.discard = [];
   }
 
   createDeck() {

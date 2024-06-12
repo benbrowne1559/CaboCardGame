@@ -10,8 +10,6 @@ export default class UIHandler {
       scene.dropZone = this.zoneHandler.renderZone(470, 500, 186, 260);
       this.zoneHandler.renderOutline(scene.dropZone);
 
-      scene.dropZone = this.zoneHandler.renderZone(1000, 500, 186, 260);
-      this.zoneHandler.renderOutline(scene.dropZone);
     }
 
     this.buildDeckAreas = () => {
@@ -43,6 +41,8 @@ export default class UIHandler {
     this.buildGameText = () => {
       scene.pickupCard = scene.add.text(960, 330, "Pickup Card").setFontSize(18).setFontFamily("Trebuchet MS");
       scene.discard = scene.add.text(440, 330, "Discard").setFontSize(18).setFontFamily("Trebuchet MS");
+      scene.notTurnText = scene.add.text(600, 300, 'Wait until your next turn').setOrigin(0.5).setFontSize(36).setVisible(false);
+      scene.pickupCardText = scene.add.text(600, 700, 'Select a card in hand to swap or drag to discard pile').setOrigin(0.5).setFontSize(36).setVisible(false);
 
     }
 

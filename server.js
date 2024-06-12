@@ -9,6 +9,7 @@ const http = require('http').createServer(server);
 
 let players = {};
 let readyCheck = 0;
+let gameState = "Initializing"
 var deck = []
 
 let allowNewConnection = true;
@@ -28,7 +29,8 @@ io.on('connection', function (socket) {
 
   players[socket.id] = {
     playerHand: [],
-    isFirstPlayer: false
+    isFirstPlayer: false,
+    beenDealt: false
   }
 
   if (Object.keys(players).length < 2) {
@@ -38,14 +40,19 @@ io.on('connection', function (socket) {
   }
 
   if (Object.keys(players).length >= 2) {
+
+    gameState = "Dealing";
     io.emit('changeGameState', 'Dealing');
     deck = new Deck();
     for (const socketId in players) {
-      hand = deck.createHand();
-      console.log(socketId, hand);
-      io.emit('dealingCards', socketId, hand);
+      if (players[socketId]['beenDealt'] != true) {
+        hand = deck.createHand();
+        players[socketId]['playerHand'] = hand;
+        console.log(socketId, players[socketId]['playerHand'], players[socketId]['isFirstPlayer']);
+        players[socketId]['beenDealt'] = true;
+        io.emit('dealingCards', socketId, hand);
+      }
     }
-
   }
 
   socket.on('pickupCard', function (socketId) {
@@ -56,6 +63,20 @@ io.on('connection', function (socket) {
       let card = deck.deck.pop();
       io.emit('pickupCard', socketId, card);
     }
+  })
+
+  socket.on('cardDiscarded', function (card, socketId) {
+    if (deck.discard.length != 0) {
+      lastDiscard = deck.discard[deck.discard.length - 1];
+      deck.discard.push(card);
+      console.log(deck.discard);
+    }
+    else {
+      deck.discard.push(card);
+      console.log(deck.discard);
+      io.emit("turnOver", socketId)
+    }
+
   })
 
 })
