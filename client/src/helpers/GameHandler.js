@@ -7,11 +7,20 @@ export default class GameHandler {
     this.player2Hand = [];
     this.canPickup = false;
     this.swappedCard = false;
+    this.discard = [];
+    this.lastDiscarded = [];
+    this.lastMatch = -1;
 
     this.changeTurn = () => {
       scene.notTurnText.setVisible(false);
       this.isMyTurn = !this.isMyTurn;
+      this.canPickup = true;
       console.log("isMyTurn: " + this.isMyTurn);
+    }
+
+
+    this.truePickup = () => {
+      this.canPickup = true;
     }
 
     this.changeGameState = (gameState) => {
@@ -22,7 +31,11 @@ export default class GameHandler {
     this.getTurn = () => {
       return this.isMyTurn;
     }
+    this.getPickup = () => {
+      return this.canPickup;
+    }
 
 
   }
+
 }

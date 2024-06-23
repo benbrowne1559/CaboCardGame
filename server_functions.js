@@ -86,4 +86,24 @@ module.exports = class Deck {
     }
 
   }
+
+  convertCard(card) {
+    let simple_card = [card['sprite'], card['suit'], card['face'], card['value'], card['power']];
+    return simple_card
+  }
+
+  getIndexFromName(name, hand) {
+    let i = 0;
+
+    hand.forEach((card) => {
+      let c = String(card[0].trim());
+      let h = String(name.trim());
+      if (c.includes(h)) {
+        return i
+      } else {
+        i = i + 1;
+      }
+    })
+    return -1
+  }
 }

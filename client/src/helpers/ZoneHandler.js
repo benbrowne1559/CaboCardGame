@@ -5,8 +5,7 @@ export default class ZoneHandler {
       let dropZone = scene.add.zone(x, y, w, h).setRectangleDropZone(w, h);
       dropZone.setData({
         "cards": 0
-      })
-        .setInteractive({ dropZone: true });
+      });
       return dropZone;
     }
 
