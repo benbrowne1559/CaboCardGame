@@ -24,10 +24,6 @@ export default class UIHandler {
         hitAreaCallback: Phaser.Geom.Rectangle.Contains,
       });
 
-
-      //scene.deckArea = scene.add.rectangle(1000, 500, 200, 280);
-      //scene.deckArea.setStrokeStyle(10, 0xff69b4);
-      //scene.deckArea.setInteractive();
       scene.deckArea = this.zoneHandler.renderZone(1000, 500, 200, 280);
       scene.deckArea.z = 10;
       scene.deckArea.depth = 10;
@@ -38,11 +34,14 @@ export default class UIHandler {
         hitArea: new Phaser.Geom.Rectangle(1000, 500, 200, 280),
         hitAreaCallback: Phaser.Geom.Rectangle.Contains,
       });
-
-
     }
-
-
+    this.buildHandAreas = () => {
+      scene.handZones = [];
+      for (let i = 0; i < 4; i++) {
+        scene.handZones.push(scene.dropZone = this.zoneHandler.renderZone((155 + (155 * i)), 860, 130, 189));
+        this.zoneHandler.renderOutline(scene.dropZone, 5);
+      }
+    }
 
     this.buildPlayerAreas = () => {
       scene.playerHandArea = scene.add.rectangle(600, 860, 1100, 230);
@@ -61,12 +60,15 @@ export default class UIHandler {
       scene.pickupCardText = scene.add.text(600, 700, 'Select a card in hand to swap or drag to discard pile').setOrigin(0.5).setFontSize(36).setVisible(false);
       scene.secondMatchText = scene.add.text(600, 700, 'Card already matched, Too Slow').setOrigin(0.5).setFontSize(36).setVisible(false);
 
+
+
     }
 
     this.buildUI = () => {
       //this.buildZones();
       this.buildPlayerAreas();
       this.buildDeckAreas();
+      this.buildHandAreas();
       this.buildGameText();
 
     }

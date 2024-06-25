@@ -10,6 +10,9 @@ export default class GameHandler {
     this.discard = [];
     this.lastDiscarded = [];
     this.lastMatch = -1;
+    this.viewOwnCards = [];
+
+    this.viewCard = [];
 
     this.changeTurn = () => {
       scene.notTurnText.setVisible(false);
@@ -35,6 +38,10 @@ export default class GameHandler {
       return this.canPickup;
     }
 
+    this.SevenEightPower = () => {
+      this.player2Hand.forEach((card) => card.setInteractive(true));
+
+    }
 
   }
 

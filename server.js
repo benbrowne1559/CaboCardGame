@@ -75,15 +75,27 @@ io.on('connection', function (socket) {
   socket.on('swappedHand', function (socketId, newCard, index) {
     //replaces hand[index] with newCard and adds hand[index] to the discard pile
     let card = deck.convertCard(newCard);
-    //console.log("Old Hand:", players[socketId]['playerHand']);
     let discard = players[socketId]['playerHand'][index];
     players[socketId]['playerHand'][index] = card;
-    //console.log("New Hand:", players[socketId]['playerHand']);
     deck.discard.push(discard);
     console.log(discard[0] + " added to discard by " + socketId);
     io.emit('renderDiscard', socketId, discard);
     io.emit('changeTurn');
   })
+  socket.on('swappedHandDiscard', function (socketId, newCard, index) {
+    //replaces hand[index] with newCard and removes newCard from discard and adds hand[index] to discard
+    let card = deck.convertCard(newCard);
+    let discard = players[socketId]['playerHand'][index];
+    players[socketId]['playerHand'][index] = card;
+    let rm = deck.discard.pop();
+    console.log(rm[0] + " removed from discard by " + socketId);
+    deck.discard.push(discard);
+    console.log(discard[0] + " added to discard by " + socketId);
+    io.emit('renderDiscard', socketId, discard);
+    io.emit('changeTurn');
+
+  })
+
   socket.on('straightDiscard', function (socketId, discardCard) {
     let discard = [discardCard['sprite'], discardCard['suit'], discardCard['face'], discardCard['value'], discardCard['power']];
     deck.discard.push(discard);
@@ -112,6 +124,11 @@ io.on('connection', function (socket) {
       let card = deck.deck.pop();
       io.emit('dealToHand', socketId, card);
     }
+  })
+
+  socket.on('viewOwnCard', function (socketId, index) {
+    let card = players[socketId]['playerHand'][index];
+    io.emit('viewOwnCard', socketId, card);
   })
 
 })
