@@ -40,8 +40,9 @@ export default class SocketHandler {
 
           let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 860, cardName, hand[i][1], hand[i][2], hand[i][3], hand[i][4], i, 'playerCard', 0.26));
 
-          scene.GameHandler.viewOwnCards.push(scene.add.text(108 + (i * 155), 720, 'View Card', { fill: '#0f0' }).setData({ "type": "viewOwnCard", "index": i }).setInteractive().setVisible(false).setFontSize(20));
-
+          scene.GameHandler.viewOwnCards.push(scene.add.text(104 + (i * 155), 720, 'View Card', { fill: '#0f0' }).setData({ "type": "viewOwnCard", "index": i }).setInteractive({
+            useHandCursor: true
+          }).setVisible(false).setFontSize(20));
         }
         //render card back for deck area
         let deckCard = scene.DeckHandler.dealBackCard(1000, 500, 10, 0.33);
@@ -50,6 +51,9 @@ export default class SocketHandler {
       else {
         for (let i in hand) {
           let card = scene.GameHandler.player2Hand.push(scene.DeckHandler.dealBackCard(155 + (i * 155), 135, i, 0.26));
+          scene.GameHandler.viewOpponentCards.push(scene.add.text(104 + (i * 155), 230, 'View Card', { fill: '#0f0' }).setData({ "type": "viewOpponentCard", "index": i, "socket": scene.socket.id }).setInteractive({
+            useHandCursor: true
+          }).setVisible(false).setFontSize(20));
         }
       }
     })
@@ -65,6 +69,10 @@ export default class SocketHandler {
         if ((card[3] == '7') || (card[3] == '8')) {
           scene.GameHandler.viewOwnCards.forEach((button) => button.setVisible(true));
         }
+        if ((card[3] == '9') || (card[3] == '10')) {
+          scene.GameHandler.viewOpponentCards.forEach((button) => button.setVisible(true));
+        }
+
       }
     })
 
@@ -109,7 +117,9 @@ export default class SocketHandler {
         this.zoneHandler.renderOutline(scene.dropZone, 5);
 
         scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (l * 155), 860, card[0], card[1], card[2], card[3], card[4], l, 'playerCard', 0.26))
-        scene.GameHandler.viewOwnCards.push(scene.add.text(108 + (l * 155), 720, 'View Card', { fill: '#0f0' }).setData({ "type": "viewOwnCard", "index": i }).setInteractive().setVisible(false).setFontSize(20));
+        scene.GameHandler.viewOwnCards.push(scene.add.text(104 + (l * 155), 720, 'View Card', { fill: '#0f0' }).setData({ "type": "viewOwnCard", "index": l }).setInteractive({
+          useHandCursor: true
+        }).setVisible(false).setFontSize(20));
 
         //return original card to hand
         let index = Number(scene.GameHandler.lastDiscarded.data.values['index']);
@@ -120,6 +130,10 @@ export default class SocketHandler {
       } else {
         let l = scene.GameHandler.player2Hand.length;
         scene.GameHandler.player2Hand.push(scene.DeckHandler.dealBackCard(155 + (l * 155), 135, l, 0.26));
+        scene.GameHandler.viewOpponentCards.push(scene.add.text(104 + (l * 155), 230, 'View Card', { fill: '#0f0' }).setData({ "type": "viewOpponentCard", "index": l }).setInteractive({
+          useHandCursor: true
+        }).setVisible(false).setFontSize(20));
+
       }
     })
 
@@ -132,6 +146,17 @@ export default class SocketHandler {
           temporary.destroy();
         }, 3000);
       }
+    })
+    scene.socket.on('viewOpponentCard', (socketId, card) => {
+      if (socketId != scene.socket.id) {
+        return
+      } else {
+        let temporary = scene.DeckHandler.dealCard(155, 500, card[0], card[1], card[2], card[3], card[4], -2, 'playerCard', 0.4)
+        setTimeout(() => {
+          temporary.destroy();
+        }, 3000);
+      }
+
     })
 
   }

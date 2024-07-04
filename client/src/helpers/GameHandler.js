@@ -11,14 +11,20 @@ export default class GameHandler {
     this.lastDiscarded = [];
     this.lastMatch = -1;
     this.viewOwnCards = [];
+    this.viewOpponentCards = [];
 
-    this.viewCard = [];
 
     this.changeTurn = () => {
       scene.notTurnText.setVisible(false);
       this.isMyTurn = !this.isMyTurn;
       this.canPickup = true;
       console.log("isMyTurn: " + this.isMyTurn);
+      if (this.gameState != "Initializing") {
+        if (this.getTurn() == true) {
+          scene.caboText.setVisible(true);
+        }
+      }
+
     }
 
 
@@ -36,11 +42,6 @@ export default class GameHandler {
     }
     this.getPickup = () => {
       return this.canPickup;
-    }
-
-    this.SevenEightPower = () => {
-      this.player2Hand.forEach((card) => card.setInteractive(true));
-
     }
 
   }

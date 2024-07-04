@@ -130,6 +130,10 @@ io.on('connection', function (socket) {
     let card = players[socketId]['playerHand'][index];
     io.emit('viewOwnCard', socketId, card);
   })
+  socket.on('viewOpponentCard', function (socketId, oppsocketId, index) {
+    let card = players[oppsocketId]['playerHand'][index];
+    io.emit('viewOwnCard', socketId, card);
+  })
 
 })
 

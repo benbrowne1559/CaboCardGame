@@ -15,6 +15,10 @@ export default class InteractiveHandler {
       scene.socket.emit('pickupCard', scene.socket.id);
     })
 
+    scene.input.on('pointerover', (pointer, object) => {
+
+    })
+
     scene.input.on('pointerdown', (pointer, object) => {
       try {
         if (object[0].data.values['type'] == "viewOwnCard") {
@@ -24,6 +28,15 @@ export default class InteractiveHandler {
           }
           scene.GameHandler.viewOwnCards.forEach((button) => button.setVisible(false));
           scene.socket.emit('viewOwnCard', scene.socket.id, index);
+        }
+
+        if (object[0].data.values['type'] == "viewOpponentCard") {
+          let index = object[0].data.values['index'];
+          if (scene.GameHandler.playerHand[index] == []) {
+            return
+          }
+          scene.GameHandler.viewOwnCards.forEach((button) => button.setVisible(false));
+          scene.socket.emit('viewOpponentCard', scene.socket.id, object[0].data.values['socket'], index);
         }
       }
       catch (error) {
@@ -50,10 +63,11 @@ export default class InteractiveHandler {
       }
     })
 
-
     scene.input.on('drop', (pointer, gameObject, dropZone) => {
       if (gameObject == scene.pickupObject) {
         scene.GameHandler.viewOwnCards.forEach((button) => button.setVisible(false));
+        scene.GameHandler.viewOpponentCards.forEach((button) => button.setVisible(false));
+        scene.caboText.setVisible(false);
         Phaser.Display.Align.In.Center(gameObject, dropZone);
         if (dropZone == scene.discardArea) {
           scene.GameHandler.discard.push(gameObject);

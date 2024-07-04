@@ -59,6 +59,9 @@ export default class UIHandler {
       scene.notTurnText = scene.add.text(600, 300, 'Wait until your next turn').setOrigin(0.5).setFontSize(36).setVisible(false);
       scene.pickupCardText = scene.add.text(600, 700, 'Select a card in hand to swap or drag to discard pile').setOrigin(0.5).setFontSize(36).setVisible(false);
       scene.secondMatchText = scene.add.text(600, 700, 'Card already matched, Too Slow').setOrigin(0.5).setFontSize(36).setVisible(false);
+      scene.caboText = scene.add.text(740, 620, 'CABO', { fill: '#0f0', strokeThickness: 5 }).setOrigin(0.5).setFontSize(62).setInteractive({
+        useHandCursor: true
+      }).setVisible(false);
 
 
 
