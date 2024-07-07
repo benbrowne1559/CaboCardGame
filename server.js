@@ -80,7 +80,7 @@ io.on('connection', function (socket) {
     deck.discard.push(discard);
     console.log(discard[0] + " added to discard by " + socketId);
     io.emit('renderDiscard', socketId, discard);
-    io.emit('changeTurn');
+    io.emit('endTurn', socketId);
   })
   socket.on('swappedHandDiscard', function (socketId, newCard, index) {
     //replaces hand[index] with newCard and removes newCard from discard and adds hand[index] to discard
@@ -92,7 +92,7 @@ io.on('connection', function (socket) {
     deck.discard.push(discard);
     console.log(discard[0] + " added to discard by " + socketId);
     io.emit('renderDiscard', socketId, discard);
-    io.emit('changeTurn');
+    io.emit('endTurn', socketId);
 
   })
 
@@ -102,7 +102,7 @@ io.on('connection', function (socket) {
     lastMatch = -1;
     console.log(discardCard['sprite'] + " added to discard by " + socketId);
     io.emit('renderDiscard', socketId, discard);
-    io.emit('changeTurn');
+    io.emit('endTurn', socketId);
   })
 
   socket.on('checkMatch', function (socketId, card, xcoord) {
@@ -134,6 +134,22 @@ io.on('connection', function (socket) {
     let card = players[oppsocketId]['playerHand'][index];
     io.emit('viewOwnCard', socketId, card);
   })
+
+  socket.on('jqPower', function (socketId, opp_index, own_index, card, discardCard) {
+    let c1 = players[socketId]['playerHand'][own_index];
+    Object.entries(players).forEach(([key, value]) => {
+      if (socketId != key) {
+        let c = players[key]['playerHand'][opp_index];
+        players[key]['playerHand'][opp_index] = c1;
+        players[socketId]['playerHand'][own_index] = c;
+        console.log(players[key]['playerHand']);
+        console.log(players[socketId]['playerHand']);
+        io.emit('jqPower', socketId, c, own_index, deck.convertCard(discardCard));
+      }
+    });
+    io.emit('endTurn', socketId);
+  })
+
 
 })
 

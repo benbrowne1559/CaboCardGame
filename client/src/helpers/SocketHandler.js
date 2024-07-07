@@ -19,7 +19,21 @@ export default class SocketHandler {
       scene.GameHandler.changeTurn();
     })
 
-    scene.socket.on('changeTurn', () => {
+    scene.socket.on('changeTurn', (socketId) => {
+      scene.GameHandler.changeTurn();
+    })
+    scene.socket.on('endTurn', (socketId) => {
+      scene.GameHandler.viewOwnCards.forEach((button) => button.setVisible(false));
+      scene.GameHandler.viewOpponentCards.forEach((button) => button.setVisible(false));
+      scene.caboText.setVisible(false);
+
+      scene.GameHandler.player2Hand.forEach((opp) => {
+        scene.input.setDraggable(opp, false);
+      });
+      scene.GameHandler.oppZones.forEach((zone) => {
+        zone.destroy();
+      })
+      scene.oppZones = [];
       scene.GameHandler.changeTurn();
     })
 
@@ -66,13 +80,22 @@ export default class SocketHandler {
         //pickupObject has index of hand.length
         let l = scene.GameHandler.playerHand.length;
         scene.pickupObject = scene.DeckHandler.dealCard(700, 500, cardName, card[1], card[2], card[3], card[4], -1, 'playerCard', 0.26);
-        if ((card[3] == '7') || (card[3] == '8')) {
+        console.log(card);
+        if (card[4] == 1) {
           scene.GameHandler.viewOwnCards.forEach((button) => button.setVisible(true));
         }
-        if ((card[3] == '9') || (card[3] == '10')) {
+        if (card[4] == 2) {
           scene.GameHandler.viewOpponentCards.forEach((button) => button.setVisible(true));
         }
+        if (card[4] == 3) {
+          scene.GameHandler.oppZones = [];
+          scene.GameHandler.player2Hand.forEach((opp) => {
+            scene.GameHandler.oppZones.push(scene.dropZone = this.zoneHandler.renderZone((155 + (155 * opp.data.values['index'])), 135, 130, 189));
 
+            scene.input.setDraggable(opp);
+            scene.children.bringToTop(opp);
+          });
+        }
       }
     })
 
@@ -156,8 +179,19 @@ export default class SocketHandler {
           temporary.destroy();
         }, 3000);
       }
-
+    })
+    scene.socket.on('jqPower', (socketId, card, index, discard) => {
+      if (socketId != scene.socket.id) {
+        scene.topDiscard = scene.GameHandler.discard.push(scene.DeckHandler.dealCard(470, 500, discard[0], discard[1], discard[2], discard[3], discard[4], -1, 'playerCard', 0.26));
+      } else {
+        let cf = scene.GameHandler.playerHand[index]
+        cf.destroy();
+        scene.GameHandler.playerHand[index] = card;
+        scene.DeckHandler.dealCard(155 + (index * 155), 860, card[0], card[1], card[2], card[3], card[4], index, 'playerCard', 0.26);
+      }
     })
 
+
   }
+
 }

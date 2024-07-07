@@ -12,6 +12,7 @@ export default class GameHandler {
     this.lastMatch = -1;
     this.viewOwnCards = [];
     this.viewOpponentCards = [];
+    this.oppZones = [];
 
 
     this.changeTurn = () => {

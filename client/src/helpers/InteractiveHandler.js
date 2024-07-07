@@ -52,7 +52,6 @@ export default class InteractiveHandler {
       if (gameObject == scene.pickupObject) {
         gameObject.setTint(0xFFFF00);
         scene.pickupCardText.setVisible(true);
-
       }
     })
     scene.input.on('dragend', (pointer, gameObject, dropped) => {
@@ -65,10 +64,8 @@ export default class InteractiveHandler {
 
     scene.input.on('drop', (pointer, gameObject, dropZone) => {
       if (gameObject == scene.pickupObject) {
-        scene.GameHandler.viewOwnCards.forEach((button) => button.setVisible(false));
-        scene.GameHandler.viewOpponentCards.forEach((button) => button.setVisible(false));
-        scene.caboText.setVisible(false);
         Phaser.Display.Align.In.Center(gameObject, dropZone);
+        //must be discarding the picked up card
         if (dropZone == scene.discardArea) {
           scene.GameHandler.discard.push(gameObject);
           scene.pickupCardText.setVisible(false);
@@ -79,15 +76,14 @@ export default class InteractiveHandler {
           console.log("straightDiscard");
           //else swapping card with one from hand
         } else {
-          const index = Math.floor(dropZone.x / 155) - 1;
-          let card = scene.GameHandler.playerHand[index];
-          if (card == null) {
-            console.log("trying to swap with empty card");
+          if (scene.GameHandler.oppZones.includes(dropZone)) {
             gameObject.x = gameObject.input.dragStartX;
             gameObject.y = gameObject.input.dragStartY;
             return
           }
-          if (card.length == 0) {
+          const index = Math.floor(dropZone.x / 155) - 1;
+          let card = scene.GameHandler.playerHand[index];
+          if ((card == null) || (card.length == 0)) {
             console.log("trying to swap with empty card");
             gameObject.x = gameObject.input.dragStartX;
             gameObject.y = gameObject.input.dragStartY;
@@ -113,7 +109,34 @@ export default class InteractiveHandler {
         }
         Phaser.Display.Align.In.Center(gameObject, dropZone);
 
-      } //else dropped card is from discard
+        //must be using power to swap own card with another hand
+        if (scene.GameHandler.oppZones.includes(dropZone)) {
+          let opp_index = scene.GameHandler.oppZones.indexOf(dropZone);
+          console.log("swapping own card with card from another hand");
+          let own_index = gameObject.data.values['index'];
+          Phaser.Display.Align.In.Center(scene.pickupObject, scene.discardArea);
+          scene.GameHandler.discard.push(gameObject);
+          scene.socket.emit('jqPower', scene.socket.id, opp_index, own_index, gameObject.data.values, scene.pickupObject.data.values);
+          scene.pickupObject = [];
+        }
+
+      }
+      //must be using power to swap opp card with own hand
+      if (scene.GameHandler.player2Hand.includes(gameObject)) {
+        if (scene.handZones.includes(dropZone)) {
+          let own_index = scene.handZones.indexOf(dropZone);
+          console.log("swapping opp card with card from own hand");
+          let opp_index = gameObject.data.values['index'];
+          Phaser.Display.Align.In.Center(scene.pickupObject, scene.discardArea);
+          scene.GameHandler.discard.push(gameObject);
+          gameObject.x = gameObject.input.dragStartX;
+          gameObject.y = gameObject.input.dragStartY;
+          scene.socket.emit('jqPower', scene.socket.id, opp_index, own_index, gameObject.data.values, scene.pickupObject.data.values);
+          scene.pickupObject = [];
+        }
+      }
+
+      //else dropped card is from discard
       else {
         //swapping discard card with card from hand
         if ((scene.GameHandler.getPickup() == true) && (scene.GameHandler.getTurn() == true)) {
